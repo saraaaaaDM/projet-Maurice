@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maurice</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 300px;
+      height: 600px;
+      background-color: rgba(155, 150, 150, 0.345);
+      background-size: cover;
+      background-position: center;
+      border-radius: 30px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      border: 12px solid black;
+      border-bottom: 70px solid black;
+      border-top: 45px solid black;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .call-screen {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(155, 150, 150, 0.345);
+      z-index: 1;
+    }
+
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-image: url("images/spa.png");
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 20px;
+      border: 2px solid black;
+    }
+
+    .call-info {
+      text-align: center;
+    }
+
+    .call-info h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .call-info p {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+
+    .control-buttons {
+      display: none;
+      justify-content: space-around;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .control-button {
+      width: 50px;
+      height: 50px;
+      background-color: #f1f1f1;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .control-button img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .call-button {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: green;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .aquarium {
+      display: none;
+      position: absolute;
+      width: 300px;
+      height: 350px;
+      background: linear-gradient(to top, #1e3f66, #78aee5);
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: 0;
+      width: 15px;
+      height: 15px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      animation: bubble 5s linear infinite;
+    }
+
+    @keyframes bubble {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-600px) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .fish {
+      position: absolute;
+      bottom: 80px;
+      width: 70px;
+      animation: swim 6s linear infinite;
+    }
+
+    @keyframes swim {
+      0% {
+        left: -60px;
+        transform: scaleX(1);
+      }
+      50% {
+        left: 260px;
+        transform: scaleX(1);
+      }
+      51% {
+        transform: scaleX(-1);
+      }
+      100% {
+        left: -60px;
+        transform: scaleX(-1);
+      }
+    }
+
+    .floating-text {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 150px;
+      animation: floatText 3s ease-in-out infinite;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+      padding: 0 20px;
+    }
+
+    @keyframes floatText {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .falling-text {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff4f4f;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  animation: fallIn 3s ease-out forwards;
+  z-index: 3;
+  white-space: nowrap;
+  line-height: 1.4;
+  margin: 10px;
+}
+
+
+@keyframes fallIn {
+  0% {
+    top: -50px;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.chute {
+display: none;
+position: absolute;
+width: 100%;
+height: 100%;
+top: 0;
+left: 0;
+pointer-events: none;
+}
+
+.patience-screen, .choco-screen, .trois-screen, .bouchon-screen {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #1e1e1e;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+ .patience-screen {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #1e1e1e;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.patience-hover {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.patience-text, .clock-img {
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.patience-text {
+  font-size: 24px;
+  font-weight: bold;
+  opacity: 1;
+  visibility: visible;
+  position: absolute;
+}
+
+.clock-img {
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.patience-hover:hover .patience-text {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.patience-hover:hover .clock-img {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.choco-screen {
+  background: linear-gradient(#4e1f1f, #8a4b4b);
+}
+
+.choco {
+  width: 100px;
+  animation: jump 1s infinite alternate;
+}
+
+.choco-text {
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  animation: shake 0.5s infinite alternate;
+}
+
+@keyframes shake {
+  0% { transform: rotate(-2deg); }
+  100% { transform: rotate(2deg); }
+}
+
+@keyframes jump {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-20px); }
+}
+.pot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.pot {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.pot-img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover; /* Assure que l'image du pot couvre toute la surface du cercle */
+}
+
+.maurice-choco {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  transform-origin: 50% 50%;
+  animation: swimInCircle 6s linear infinite;
+  filter: drop-shadow(0 0 2px #000);
+}
+
+/* Mouvement circulaire de Maurice autour du pot */
+@keyframes swimInCircle {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(70px);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(70px);
+  }
+}
+
+/* Optionnel : une bouche pleine de chocolat pour Maurice */
+.maurice-choco::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background: #3b1f1f;
+  border-radius: 50%;
+}
+
+/* Texte en dessous du pot */
+.choco-text-pot {
+  font-size: 18px;
+  color: #f1e3d3;
+  font-weight: bold;
+  text-align: center;
+  animation: floatText 3s ease-in-out infinite;
+  text-shadow: 2px 2px 4px #000;
+}
+
+
+
+.trois-screen {
+  background: #1b2e4a;
+}
+
+.choco-drop-container {
+  position: relative;
+  height: 100px;
+}
+
+.choco-drop {
+  position: absolute;
+  font-size: 40px;
+  top: -50px;
+  left: 50%;
+  animation: dropChoco 2s ease-in forwards;
+}
+
+.choco-drop:nth-child(1) { left: 40%; animation-delay: 0s; }
+.choco-drop:nth-child(2) { left: 50%; animation-delay: 0.3s; }
+.choco-drop:nth-child(3) { left: 60%; animation-delay: 0.6s; }
+
+@keyframes dropChoco {
+  to { top: 300px; opacity: 0; }
+}
+
+.trois-text {
+  margin-top: 150px;
+  font-size: 22px;
+  color: #fff;
+  animation: floatText 3s ease-in-out infinite;
+}
+
+.bouchon-screen {
+  background: radial-gradient(circle, #2a003f, #000);
+  flex-direction: column;
+}
+
+.maurice-rotate {
+  width: 100px;
+  animation: spin 3s linear infinite;
+}
+
+.bouchon-text {
+  margin-top: 20px;
+  font-size: 20px;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); color: #ffcc00; }
+  100% { transform: scale(1); }
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="phone-screen" id="phone-screen">
+    <div class="call-screen" id="call-screen">
+      <div class="profile-pic"></div>
+      <div class="call-info">
+        <h1>SPA</h1>
+        <p>01 43 80 97 06</p>
+      </div>
+      <button id="call-button" class="call-button">
+        <img src="images/appel.png" alt="appel">
+      </button>
+      <div class="control-buttons" id="control-buttons">
+        <div class="control-button"><img src="images/volume.png" alt="haut-parleur"></div>
+        <div class="control-button"><img src="images/micro.png" alt="micro"></div>
+        <div class="control-button"><img src="images/clavier.png" alt="clavier"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- phrase 1 -->
+  <div class="aquarium" id="aquarium">
+    <div class="floating-text">Allô le responsable des poissons rouges ?</div><br>
+    <img src="images/poisson.png" class="fish" />
+  </div>
+
+  <!-- phrase 2 -->
+  <div class="chute" id="chute"></div>
+
+  <!-- phrase 3 -->
+<div class="patience-screen" id="patience-screen">
+  <div class="patience-hover">
+    <div class="patience-text">Allo<br>oui<br>je<br>patiente</div>
+    <img src="images/horloge.png" alt="horloge" class="clock-img" />
+  </div>
+</div>
+
+<!-- phrase 3 -->
+<div class="choco-screen" id="choco-screen">
+  <div class="pot-container">
+    
+    <div class="pot">
+      <img src="images/pot-vide.png" alt="Pot de chocolat" class="pot-img" />
+      <img src="images/poisson-choco.png" alt="Maurice" class="maurice-choco" />
+    </div>
+    <div class="choco-text-pot">Maurice a encore bouffé tous les chocos suisses</div>
+  </div>
+</div>
+
+
+<!-- phrase 5 -->
+<div class="trois-screen" id="trois-screen">
+  <div class="choco-drop-container">
+    <div class="choco-drop">🍫</div>
+    <div class="choco-drop">🍫</div>
+    <div class="choco-drop">🍫</div>
+  </div>
+  <div class="trois-text">Trois d'un coup cette fois</div>
+</div>
+
+<!-- phrase 6 -->
+<div class="bouchon-screen" id="bouchon-screen">
+  <img src="images/poisson.png" class="maurice-rotate" />
+  <div class="bouchon-text">Tu pousses le bouchon un peu trop loin Maurice</div>
+</div>
+
+  
+  <audio id="ring-tone">
+    <source src="images/bip.wav" type="audio/wav">
+  </audio>
+
+  <script>
+    const callButton = document.getElementById("call-button");
+    const callScreen = document.getElementById("call-screen");
+    const phoneScreen = document.getElementById("phone-screen");
+    const ringTone = document.getElementById("ring-tone");
+    const aquarium = document.getElementById("aquarium");
+    const chute = document.getElementById("chute");
+    const fallingText = document.getElementById("falling-text");
+  
+    callButton.addEventListener("click", async () => {
+      callButton.style.display = "none";
+      ringTone.play();
+  
+      await new Promise(resolve => {
+        ringTone.onended = resolve;
+      });
+  
+      phoneScreen.style.transition = "opacity 1s ease";
+      phoneScreen.style.opacity = 0;
+  
+      setTimeout(() => {
+        phoneScreen.style.display = "none";
+        aquarium.style.display = "block";
+  
+        // Bulles 
+        setInterval(() => {
+          const bubble = document.createElement("div");
+          bubble.classList.add("bubble");
+          bubble.style.left = `${Math.random() * 280 + 10}px`;
+          bubble.style.width = bubble.style.height = `${Math.random() * 8 + 4}px`;
+          aquarium.appendChild(bubble);
+          setTimeout(() => bubble.remove(), 6000);
+        }, 400);
+      }, 1000);
+    });
+  
+    // flèche droite
+   let currentStep = 0;
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight") {
+    currentStep++;
+
+    switch (currentStep) {
+      case 1:
+        aquarium.style.display = "none";
+        chute.style.display = "block";
+        generateFallingTexts(30);
+        break;
+      case 2:
+        chute.style.display = "none";
+        document.getElementById("patience-screen").style.display = "flex";
+        break;
+      case 3:
+        document.getElementById("patience-screen").style.display = "none";
+        document.getElementById("choco-screen").style.display = "flex";
+        break;
+      case 4:
+        document.getElementById("choco-screen").style.display = "none";
+        document.getElementById("trois-screen").style.display = "flex";
+        break;
+      case 5:
+        document.getElementById("trois-screen").style.display = "none";
+        document.getElementById("bouchon-screen").style.display = "flex";
+        break;
+    }
+  }
+});
+
+
+function generateFallingTexts(count) {
+  chute.innerHTML = ""; // Nettoie le contenu précédent
+
+  for (let i = 0; i < count; i++) {
+    const text = document.createElement("div");
+    text.className = "falling-text";
+    text.textContent = "Ah tu tombes bien";
+
+    // Position horizontale aléatoire (0% à 90%)
+    text.style.left = `${Math.random() * 90}%`;
+
+    // Délai d’animation aléatoire pour effet de cascade
+    text.style.animationDelay = `${Math.random() * 2}s`;
+    text.style.top = `${-50 - i * 40}px`;
+
+    chute.appendChild(text);
+  }
+}
+  </script>
+  
+</body>
+</html>
